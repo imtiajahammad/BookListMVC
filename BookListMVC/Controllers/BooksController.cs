@@ -40,6 +40,28 @@ namespace BookListMVC.Controllers
         }
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert()
+        {
+            if (ModelState.IsValid)
+            {
+                if (Book.Id == 0)
+                {
+                    //create
+                    _applicationDbContext.Books.Add(Book);
+                }
+                else
+                {
+                    _applicationDbContext.Books.Update(Book);
+                }
+                _applicationDbContext.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(Book);
+        }
+
+
         #region API Calls
         [HttpGet]
         public async Task<IActionResult> GetAll()
